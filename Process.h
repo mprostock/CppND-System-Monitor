@@ -1,4 +1,8 @@
+#pragma once
+
 #include <string>
+#include "ProcessParser.h"
+#include "util.h"
 
 using namespace std;
 /*
@@ -10,27 +14,27 @@ private:
     string pid;
     string user;
     string cmd;
-    string cpu;
+    float cpu;
     string mem;
-    string upTime;
+    float upTime;
 
 public:
     Process(string pid){
         this->pid = pid;
         this->user = ProcessParser::getProcUser(pid);
-        //TODOs:
-        //complete for mem
-        //complete for cmd
-        //complete for upTime
-        //complete for cpu
+        this->mem = ProcessParser::getVmSize(pid);
+        this->cmd = ProcessParser::getCmd(pid);
+        this->upTime = ProcessParser::getProcUpTime(pid);
+        this->cpu = ProcessParser::getCpuPercent(pid);
+
     }
     void setPid(int pid);
     string getPid()const;
     string getUser()const;
     string getCmd()const;
-    int getCpu()const;
-    int getMem()const;
-    string getUpTime()const;
+    float getCpu()const;
+    string getMem()const;
+    float getUpTime()const;
     string getProcess();
 };
 void Process::setPid(int pid){
@@ -39,12 +43,43 @@ void Process::setPid(int pid){
 string Process::getPid()const {
     return this->pid;
 }
+
+string Process::getCmd()const {
+    return this->cmd;
+}
+
+float Process::getCpu()const {
+    return this->cpu;
+}
+
+string Process::getUser()const {
+    return this->user;
+}
+
+float Process::getUpTime()const {
+    return this->upTime;
+}
+
+string Process::getMem()const {
+    return this->mem;
+}
+
+
+
 string Process::getProcess(){
     if(!ProcessParser::isPidExisting(this->pid))
         return "";
-    this->mem = ProcessParser::getVmSize(this->pid);
-    this->upTime = ProcessParser::getProcUpTime(this->pid);
-    this->cpu = ProcessParser::getCpuPercent(this->pid);
-
-    return (this->pid + "   " + //TODO: finish the string! this->user + "   "+ mem...cpu...upTime...;
+    mem = ProcessParser::getVmSize(pid);
+    upTime = ProcessParser::getProcUpTime(pid);
+    cpu = ProcessParser::getCpuPercent(pid);
+    stringstream out;
+    out << setprecision(2) << fixed;
+    out << setw(6) << right << pid << " " 
+        << setw(14) << left << user.substr(0,14) << " " 
+        << setw(7) << right  << cpu << " "
+        << setw(15) << right  << mem << " "
+        << setw(9) << right << Util::convertToTime((long)(upTime)) << "  "
+        << setw(30) << left << cmd.substr(0,50);
+    return out.str();
+    //return (pid + "   " + user + "   " + mem + "   " + cpu + "   " + upTime + "   " + cmd.substr(0,30));
 }

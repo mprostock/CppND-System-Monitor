@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Process.h"
 #include <vector>
 class ProcessContainer{
@@ -14,11 +16,20 @@ public:
 };
 
 void ProcessContainer::refreshList(){
-    std::vector<std::string> pidList = ProcessParser::getPidList();
+    std::vector<int> pidList = ProcessParser::getPidList();
     this->_list.clear();
     for(int i=0;i<pidList.size();i++){
-        Process proc(pidList[i]);
-        this->_list.push_back(proc);
+        try{
+            Process proc(to_string(pidList[i]));
+            string cmd = proc.getCmd();
+            if (cmd.empty())
+                continue;
+            else
+                this->_list.push_back(proc);
+            }
+        catch (std::runtime_error){
+            continue;
+        }
     }
 }
 std::string ProcessContainer::printList(){
@@ -36,12 +47,12 @@ std::vector<std::vector<std::string> > ProcessContainer::getList(){
     }
     int lastIndex = 0;
     for (int i=0; i<stringifiedList.size();i++){
-        if(i %10 == 0 && i > 0){
-          std::vector<std::string>  sub(&stringifiedList[i-10], &stringifiedList[i]);
+        if(i %25 == 0 && i > 0){
+          std::vector<std::string>  sub(&stringifiedList[i-25], &stringifiedList[i]);
           values.push_back(sub);
           lastIndex = i;
         }
-        if(i == (ProcessContainer::_list.size() - 1) && (i-lastIndex)<10){
+        if(i == (ProcessContainer::_list.size() - 1) && (i-lastIndex)<25){
             std::vector<std::string> sub(&stringifiedList[lastIndex],&stringifiedList[i+1]);
             values.push_back(sub);
         }
