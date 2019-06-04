@@ -2,22 +2,23 @@
 
 My Solution code for System Monitor Project in the C++ OOP course. 
 
-## To setup and compile in Udacity Ubuntu workspace:
+## To setup and compile:
 
-1. Clone original starter repository into `/home/workspace/`
+1. Clone repo
 ```
-cd /home/workspace/
-git clone https://github.com/udacity/CppND-System-Monitor
+git clone https://github.com/mprostock/CppND-System-Monitor
 ```
-2. Follow along with the lesson and make sure you complete the `ProcessParser` and `Process` classes before attempting to run the project.
-
-3. Install `ncurses` package
+2. Install `ncurses` package
 ```
 sudo apt-get install libncurses5-dev libncursesw5-dev
 ```
-4. Compile and run
+3. Compile and run
 ```
 g++ -std="c++17" main.cpp -lncurses
 ./a.out
 ```
 
+Or you can check out the original starter code from udacity:
+```
+git clone https://github.com/mprostock/CppND-System-Monitor
+```
